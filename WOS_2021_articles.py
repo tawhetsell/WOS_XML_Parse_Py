@@ -3,25 +3,12 @@ import pandas as pd
 from concurrent.futures import ProcessPoolExecutor
 import os
 import xml.etree.ElementTree as ET
-from fuzzywuzzy import fuzz
 import re
 import numpy as np
 import gzip
 
 def standardize_country_name(name):
     return re.sub('[^a-zA-Z]', '', name).lower()
-
-def get_standard_country_name(name, all_countries):
-    for country in all_countries:
-        if fuzz.ratio(name, country) > 80:
-            return country
-    return name
-
-def fuzzy_country_mapping(all_countries):
-    mapping = {}
-    for country in all_countries:
-        mapping[country] = get_standard_country_name(country, all_countries)
-    return mapping
 
 def process_single_file(xml_file, tag='Article'):
     print(f"Starting XML parsing for {xml_file}...")
@@ -71,16 +58,6 @@ if __name__ == '__main__':
             all_countries.update(chunk_countries)
             for key, value in chunk_pairs.items():
                 country_pairs[key] += value
-
-    fuzzy_country_mapping_dict = fuzzy_country_mapping(all_countries)
-
-    for key in list(country_pairs.keys()):
-        country1, country2 = key
-        new_country1 = fuzzy_country_mapping_dict.get(country1, country1)
-        new_country2 = fuzzy_country_mapping_dict.get(country2, country2)
-        new_key = (new_country1, new_country2)
-        if new_key != key:
-            country_pairs[new_key] = country_pairs.pop(key)
 
     print(f"Total countries found: {len(all_countries)}")
     print(f"Total country pairs found: {len(country_pairs)}")
