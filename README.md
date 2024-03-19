@@ -5,4 +5,6 @@ The WOS_2021_articles.py script parses the WOS XML files for the year 2021 and g
 
 The WOS_2021_articles_disambiguation.py script disambiguates the names of the locations and standardizes the names as three letter ISO codes. 
 
+WoS_XML_Parse_Heading_Py parses through each WoS XML file year by year and generates country-country matrixes for science & technology, arts & Humanities, and social sciences, which is the highest level category in WoS called heading. 
+
 The scripts were produced iteratively using GPT-4.
